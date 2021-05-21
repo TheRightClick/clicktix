@@ -7,7 +7,7 @@ from functools import wraps
 from flask import Blueprint, request, jsonify, session
 from flask_bcrypt import generate_password_hash, check_password_hash               
 from playhouse.shortcuts import model_to_dict
-from flask_login import login_user, logout_user 
+from flask_login import login_user, logout_user
 users = Blueprint('user','users')
 
 users.secret_key = os.environ.get("APP_SECRET")
@@ -28,10 +28,21 @@ def check_token(func):
 
 
 
-
 @users.route('/', methods=['GET'])
-def test_user_resource():
-    return "user resource works"
+def user_index():
+    query = models.Users.select(models.Users.username,  models.Users.id)
+   
+    user_dict = [model_to_dict(user) for user in query]
+
+    # return "user resource works"
+
+    return jsonify({
+        'data': user_dict,
+        'message': 'sending usernames',
+        'status': 200
+    }), 200
+
+
 
 @users.route('/register', methods=['POST'])
 def register():
