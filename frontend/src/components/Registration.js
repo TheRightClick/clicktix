@@ -36,7 +36,7 @@ export default class Register extends Component {
         }).then ( res => {
             return res.json()
         }).then ( data => {
-            if (data.status != 401) {
+            if (data.status !== 401) {
                 this.props.addSess(data)
                 window.location.href ="/"
             } else

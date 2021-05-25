@@ -1,5 +1,6 @@
 import models
 from flask import Blueprint, jsonify, request, session
+from datetime import datetime, time
 from playhouse.shortcuts import model_to_dict
 from flask_login import current_user, login_required
 
@@ -11,9 +12,12 @@ notes = Blueprint('notes', 'notes')
 @login_required
 def notes_index():
     payload = request.get_json()
-    query = models.Notes.select().where(models.Notes.ticket_id==payload['ticket_id'])
+    query = models.Notes.select().where(models.Notes.ticket_id==payload['ticket_id']).order_by(models.Notes.last_update.desc())
+    
     query_dict = [model_to_dict(note) for note in query]
-    # notes_dicts = [model_to_dict(notes) for notes in query.ticket_notes] 
+
+    [note['note_by'].pop('password') for note in query_dict]
+    [note['ticket_id'].pop('note') for note in query_dict]
     return jsonify({
         'data': query_dict,
         'message': f"Successfully found {len(query_dict)} notes",
@@ -26,16 +30,21 @@ def notes_index():
 @login_required
 def create_note():
     payload = request.get_json() 
-    print(payload) 
-    new_note = models.Notes.create(note = payload['note'], note_by=current_user.id, ticket_id=payload['ticket_id'])
-    note_dict = model_to_dict(new_note) 
-
+    new_note = models.Notes.create(note = payload['note'],
+    note_by=current_user.id, ticket_id=payload['ticket_id'])
+    day = datetime.now().strftime("%d/%m/%Y")
+    now = datetime.now().strftime("%H:%M:%S")
+    models.Ticket.update(last_update = f"{day} {now}") .where(models.Ticket.id==payload['ticket_id']).execute()
+    note_dict = model_to_dict(new_note)
+    note_dict['note_by'].pop('password')
+    note_dict['ticket_id'].pop('note')
+    
     return jsonify(
         data = note_dict,
         message="created note.",
         status= 201
         ), 201
-    
+
 
 
 #UPDATE PUT ROUTE

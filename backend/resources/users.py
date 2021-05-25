@@ -28,7 +28,7 @@ def check_token(func):
 
 
 
-@users.route('/', methods=['GET'])
+@users.route('/', methods=['GET', 'POST'])
 def user_index():
     query = models.Users.select(models.Users.username,  models.Users.id)
    
@@ -37,6 +37,7 @@ def user_index():
     # return "user resource works"
 
     return jsonify({
+        
         'data': user_dict,
         'message': 'sending usernames',
         'status': 200

@@ -8,8 +8,7 @@ export default class NavbarMain extends Component {
   constructor(props) {
     super(props)
       this.state = {
-        baseURL: 'http://localhost:8000/api/v1/dogs/',
-        dogs:[],
+        baseURL: 'http://localhost:8000/api/v1/tickets/',
         userUrl: 'http://localhost:8000/api/v1/users/',
         user:'',
         session: ''
@@ -26,15 +25,14 @@ export default class NavbarMain extends Component {
                   'Content-Type': 'application/json',
               },
               'credentials': 'include'
-              
       }).then ( res => {
           return res.json()
       }).then ( data => {
         this.props.clearSess()
         
-      }).catch(error => console.error)
-    
-      return
+      }).catch(error => console.error).then(
+      window.location.href = "/"
+      )
     }
 
 
@@ -42,11 +40,12 @@ export default class NavbarMain extends Component {
         return (
             <div>
 <Navbar bg="light" expand="lg">
-  <Navbar.Brand href="#home">Dogs</Navbar.Brand>
+  <Navbar.Brand href="#home">Click Tix</Navbar.Brand>
   <Navbar.Toggle aria-controls="basic-navbar-nav" />
   <Navbar.Collapse id="basic-navbar-nav">
     <Nav className="mr-auto">
-      <Nav.Link href="/">Home</Nav.Link>
+      <Nav.Link href="/tickets">Home</Nav.Link>
+      <Nav.Link href="/new">New Ticket</Nav.Link>
       <Nav.Link onClick={ (e) => this.handleSubmitLogout(e)} href="/" >Sign-Out</Nav.Link>
     </Nav>
   </Navbar.Collapse>

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Card } from "react-bootstrap";
-
+import {Navbar, Nav, NavDropdown, Form, FormControl, Button } from 'react-bootstrap';
 export default class Login extends Component {
     constructor(props) {
         super(props)
@@ -24,7 +24,6 @@ export default class Login extends Component {
         fetch(`${this.props.userUrl}login`, {
             method: 'POST', 
             body: JSON.stringify({
-                //below is where the other attributes get put...
                 username: this.state.username,
                 password: this.state.password
             }),
@@ -35,20 +34,23 @@ export default class Login extends Component {
         }).then ( res => {
             return res.json()
         }).then ( data => {
-            if (data.status == 200) {
+            console.log(data)
+            if (data.status === 200) {
                 this.props.addSess(data)
-                console.log(data)
+                this.props.getTickets()
             } else
             {this.setState ({
                 login_error: "invalid Login"
                 })
                 }
         }).catch(error => console.error)
+        
+        
     }
 
 
     render() {
-        // console.log(`${this.props.userUrl}login`)
+        
         return (
             <div className='container' style={{"width" : "50%"}} >
             <Card style={{display: 'flex', justifyContent: 'center'}}>
@@ -61,19 +63,15 @@ export default class Login extends Component {
                     <input type="text" className="form-control" name="username" placeholder="Enter username" onChange={ (e) => this.handleChange(e)} value={this.state.username}/>
                 </div>
 
+
                 <div className="form-group">
                     <label>Password</label>
                     <input type="password" className="form-control" name = "password" placeholder="Enter password" onChange={ (e) => this.handleChange(e)} value={this.state.password} />
                 </div>
 
-                <div className="form-group">
-                    <div className="custom-control custom-checkbox">
-                        <input type="checkbox" className="custom-control-input" id="customCheck1" />
-                        <label className="custom-control-label" htmlFor="customCheck1">Remember me</label>
-                    </div>
-                </div>
+               
                  <p>{this.state.login_error}</p>   
-                <button type="submit" className="btn btn-primary btn-block">Submit</button>
+                <button type="submit" className="btn btn-primary btn-block" href="/">Submit</button>
                 <a class="btn btn-info" href="/register" role="button">Register</a>
             </form>
             </Card.Body>

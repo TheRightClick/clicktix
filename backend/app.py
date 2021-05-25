@@ -35,7 +35,9 @@ CORS(tickets, origins=['http://localhost:3000', 'http://localhost:3000/'], suppo
 
 CORS(users, origins=['http://localhost:3000', 'http://localhost:3000/'], supports_credentials=True, url_prefix='/api/v1/users/')
 
-CORS(tickets, origins=['http://localhost:3000', 'http://localhost:3000/'], supports_credentials=True, url_prefix='api/v1/notes/') 
+CORS(notes, origins=[ 'http://localhost:3000', 'http://localhost:3000/'], supports_credentials=True, url_prefix='/api/v1/notes/') 
+
+
 
 @app.before_request
 def before_request():
@@ -47,7 +49,6 @@ def before_request():
 @app.after_request
 def after_request(response):
     """Close the database connection after each request."""
-   
     g.db.close()
     return response
 
@@ -56,6 +57,7 @@ app.register_blueprint(tickets, url_prefix='/api/v1/tickets/')
 app.register_blueprint(users, url_prefix='/api/v1/users/' )
 
 app.register_blueprint(notes, url_prefix='/api/v1/notes/' )
+
 
 
 if __name__ == '__main__':

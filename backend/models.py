@@ -23,6 +23,8 @@ class Ticket(Model):
     status = CharField()
     created_by =  ForeignKeyField(Users)
     assignee = ForeignKeyField(Users, backref='user_tix')
+    last_update = IntegerField(default=datetime.datetime.now().strftime('%Y-%m-%d'))
+ 
 
     class Meta:
         database = DATABASE 
@@ -30,11 +32,11 @@ class Ticket(Model):
 
 class Notes(Model):
     note = CharField() 
-    # owner = ForeignKeyField(Users, backref='my_dogs')
+    
     created_time = DateTimeField(default=datetime.datetime.now)
-    note_by = ForeignKeyField(Users, backref='user_notes')
-    ticket_id = ForeignKeyField(Ticket, backref='ticket_notes')
-
+    note_by = ForeignKeyField(Users)
+    ticket_id = ForeignKeyField(Ticket.id)
+    # ticket_id = ForeignKeyField(Ticket.id, backref='notes_ordered')
 
     class Meta:
         database = DATABASE 

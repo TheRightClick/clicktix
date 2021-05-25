@@ -1,116 +1,44 @@
-import React, { useEffect, useState } from 'react'
-import {Button, Modal } from 'react-bootstrap'
+import React, { Component } from 'react'
+import { Button } from 'react-bootstrap';
+import { BrowserRouter as Router, Route, Switch, Link, Redirect } from 'react-router-dom'
 
 
-function Edit(props) {
-    const [state, setState] = useState(true)
-    const [show, setShow] = useState(false);
-  
-    const handleClose = () => {
-        props.getDogs()
-        setShow(false);
+
+export default class Edit extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+        ticket: this.props.ticket    
+    }
+}
+    clicked(e) {
+        e.preventDefault()
+        return (
+
+            <Redirect
+                to={{
+                    path:"/view",
+                    // state: {
+                    //     ticket:this.props.ticket
+                    // }
+                }} ticket={this.state.ticket} />
+        )
+    }
+
+    render() {
         
-    }
-
-    const handleShow = () =>{
-        setShow(true);
-        setBreed(props.dog.breed)
-        setName(props.dog.name)
-        setAge(props.dog.age)
-    }
-   
-    const [breed, setBreed] = useState('');
-    const [name, setName] = useState('');
-    const [age, setAge] = useState('');
-
-
-
-    const handleBreed = (e) => {
-        e.preventDefault();
-        const value = e.target.value;
-        setBreed(value);
-    }
-
-    const handleName = (e) => {
-        e.preventDefault();
-        const value = e.target.value;
-        setName(value);
-    }
-
-    const handleAge = (e) => {
-        e.preventDefault();
-        const value = e.target.value;
-        setAge(value);
-    }
-    const handleSubmit = () => {
-        
-        
-        console.log(`${props.baseUrl}${props.dog.id}`)
-        fetch(`${props.baseUrl}${props.dog.id}`,  {
-            method: 'PUT', 
-            body: JSON.stringify({
+        return (
+            <>
+                <Switch>
+               <Route exact path="/view">
+                {/* <TicketView notesUrl={this.notesUrl} addTicket={this.addTicket}  addSess = {this.addSess} session={this.state.session} baseUrl={this.state.    baseURL} userUrl={this.state.userUrl} ticket={ticket}/> */}
                 
-                breed: breed,
-                age: age,
-                name: name,
-            }),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                'credentials': 'include'
-        }).then ( res => {
-            return res.json()
-        }).then ( data => {
-            console.log(data)
-        }).then(
-        props.getDogs()).catch(error => console.error)
+                </Route>
+                </Switch>
+        <Button onClick={this.clicked} type="button" class="btn btn-default btn-sm">
+          <span class="glyphicon glyphicon-pencil"></span> View/Edit
+        </Button>  
+            </>
+        )
     }
-
-
-    return (
-      <>
-        <button style={{cursor:'pointer'}}type="submit" onClick={handleShow}>
-          Edit
-        </button>
-        
-        <Modal show={show} onHide={handleClose}>
-            
-          <Modal.Header closeButton>
-            <Modal.Title>Modal heading</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-          <form >
-          <div className="form-group">
-                    <label>Name</label>
-                    <input type="text" className="form-control" name="name"  value={name} onChange={handleName}/>
-                </div>
-
-                <div className="form-group">
-                    <label>age</label>
-                    <input type="text" className="form-control" name = "age"  onChange={handleAge} value={age} />
-                </div>
-
-                <div className="form-group">
-                    <label>breed</label>
-                    <input type="text" className="form-control" name = "breed"  value={breed} onChange={handleBreed} />
-                </div>
-          
-                </form>
-          
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
-              Close
-            </Button>
-            <Button  variant="primary" onClick={handleSubmit}>
-              Save
-            </Button>
-            
-          </Modal.Footer>
-        </Modal>
-      </>
-    );
-  }
-
-  
-  export default Edit;
+}
