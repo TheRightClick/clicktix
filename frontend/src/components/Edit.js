@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Button } from 'react-bootstrap';
-import { BrowserRouter as Router, Route, Switch, Link, Redirect } from 'react-router-dom'
+import { BrowserRouter as Route, Switch, Redirect } from 'react-router-dom'
 
 
 
@@ -18,9 +18,7 @@ export default class Edit extends Component {
             <Redirect
                 to={{
                     path:"/view",
-                    // state: {
-                    //     ticket:this.props.ticket
-                    // }
+                   
                 }} ticket={this.state.ticket} />
         )
     }
@@ -31,7 +29,7 @@ export default class Edit extends Component {
             <>
                 <Switch>
                <Route exact path="/view">
-                {/* <TicketView notesUrl={this.notesUrl} addTicket={this.addTicket}  addSess = {this.addSess} session={this.state.session} baseUrl={this.state.    baseURL} userUrl={this.state.userUrl} ticket={ticket}/> */}
+                
                 
                 </Route>
                 </Switch>

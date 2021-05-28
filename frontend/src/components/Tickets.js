@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import NewForm from './NewForm.js'
-import Delete from './Delete.js'
-import Edit from './Edit.js'
-import {Table, Nav, NavDropdown, Form, FormControl, Button } from 'react-bootstrap';
-import { BrowserRouter as Router, Route, Switch, Link, Redirect } from 'react-router-dom'
 
-let edit = false
+import Delete from './Delete.js'
+
+import {Table } from 'react-bootstrap';
+
+
+
 
 export default class Tickets extends Component {
     constructor(props) {
@@ -52,11 +52,12 @@ export default class Tickets extends Component {
       this.getTickets()
     }
 
-
+   
+    
     render() {
-     
+      
         return (
-
+          
 
             <div>
          
@@ -88,8 +89,9 @@ export default class Tickets extends Component {
          </tbody>
        </Table>
             </div>
-        )
+          )
     }
+  
 }
 
 // onClick={this.editOne.bind(this)}

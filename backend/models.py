@@ -23,7 +23,7 @@ class Ticket(Model):
     status = CharField()
     created_by =  ForeignKeyField(Users)
     assignee = ForeignKeyField(Users, backref='user_tix')
-    last_update = IntegerField(default=datetime.datetime.now().strftime('%Y-%m-%d'))
+    last_update = IntegerField(default=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
  
 
     class Meta:

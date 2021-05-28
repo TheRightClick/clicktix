@@ -7,41 +7,65 @@ from functools import wraps
 from flask import Blueprint, request, jsonify, session
 from flask_bcrypt import generate_password_hash, check_password_hash               
 from playhouse.shortcuts import model_to_dict
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, current_user, login_required
 users = Blueprint('user','users')
 
 users.secret_key = os.environ.get("APP_SECRET")
 
 
-def check_token(func):
-    @wraps(func)
-    def wrapped(*args, **kwargs):
-        token = request.args.get('token')
-        if not token:
-            return jsonify({'message': 'missing token'}), 403
-        try:
-            data = jwt.decode(token, users.secret_key)
-        except:
-            return jsonify({'message': 'invalid token'}), 403
-        return func(*args, **kwargs)
-    return wrapped
+# def check_token(func):
+#     @wraps(func)
+#     def wrapped(*args, **kwargs):
+#         token = request.args.get('token')
+#         if not token:
+#             return jsonify({'message': 'missing token'}), 403
+#         try:
+#             data = jwt.decode(token, users.secret_key)
+#         except:
+#             return jsonify({'message': 'invalid token'}), 403
+#         return func(*args, **kwargs)
+#     return wrapped
 
 
 
 @users.route('/', methods=['GET', 'POST'])
+
 def user_index():
-    query = models.Users.select(models.Users.username,  models.Users.id)
-   
-    user_dict = [model_to_dict(user) for user in query]
+    if request.method == 'POST':
+        if current_user.is_authenticated:
+            current = model_to_dict(current_user)
+            current.pop('password')
+            return jsonify({
+                'data': current,
+                'message': 'sending current user',
+                'status': 200
+            }), 200
 
-    # return "user resource works"
+        else:
+            no_user = {'no_user':'no_user'}
 
-    return jsonify({
+            return jsonify({
+                'data': no_user,
+                'message': 'no session',
+                'status': 205
+            }), 205
+
         
-        'data': user_dict,
-        'message': 'sending usernames',
-        'status': 200
-    }), 200
+
+    else: 
+
+        query = models.Users.select(models.Users.username,  models.Users.id)
+    
+        user_dict = [model_to_dict(user) for user in query]
+
+        # return "user resource works"
+
+        return jsonify({
+            
+            'data': user_dict,
+            'message': 'sending usernames',
+            'status': 200
+        }), 200
 
 
 
@@ -95,7 +119,7 @@ def register():
 
         
         return jsonify(
-            token=token,
+            # token=token,
             data=created_user_dict,
             message=f"Successfully registered user {created_user_dict['email']}",
             status=201
@@ -130,7 +154,7 @@ def login():
 
             return jsonify(
                 data={},
-                token = token,
+                # token = token,
                 message=f"succesfully logged in {user_dict['email']}",
                 status=200
             ), 200
@@ -154,9 +178,15 @@ def login():
 
 @users.route('/logout', methods=["GET"])
 def logout():
-    logout_user() 
+    
+    
+    session.clear()
+    logout_user()
+    
+    session.clear()
+    
     return jsonify(
-        data={}, 
+        data={},
         status=200, 
         message= 'successful logout'
     ), 200

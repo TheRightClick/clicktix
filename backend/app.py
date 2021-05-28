@@ -23,12 +23,15 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 
+
+
+
 @login_manager.user_loader
-def load_use(user_id):
-    return models.Users.get(models.Users.id == user_id)
-
-
-
+def load_user(user_id):
+    try:
+        return models.Users.get(models.Users.id == user_id)
+    except models.DoesNotExist:
+        return None
 
 
 CORS(tickets, origins=['http://localhost:3000', 'http://localhost:3000/'], supports_credentials=True, url_prefix='api/v1/tickets/') 

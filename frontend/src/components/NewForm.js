@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import {Dropdown, Card }  from 'react-bootstrap';
-import { Redirect } from 'react-router-dom';
+import {Dropdown, Card, Container, Row, Col }  from 'react-bootstrap';
+
 export default class NewForm extends Component {
     constructor(props) {
         super(props)
@@ -17,7 +17,6 @@ export default class NewForm extends Component {
             notesUrl:'http://localhost:8000/api/v1/notes/',
             note:''
         }
-
     }
 
     status = ["Open", "Working", "Pending Info", "Closed"]
@@ -29,11 +28,9 @@ export default class NewForm extends Component {
     }
     
     handleNotesChange =(e)=> {
-        
         this.setState({
             [e.target.name]: e.target.value
-        })
-        
+        }) 
     }
     
 
@@ -93,11 +90,12 @@ export default class NewForm extends Component {
                 status:'Select Status',
                 assignee:'',
                 assignee_name:'Select Assignee',
-                note:''
+                note:'',
+                empty_status: '',
+                empty_assignee: '',
+                empty_desc: '',
                 })
-            
         }).catch(error => console.error)
-        // window.location.href = "/Tickets"
     }
 
 
@@ -113,16 +111,34 @@ export default class NewForm extends Component {
        
         return (
 <div className='container' style={{"width" : "90%"}} >
-<Card style={{display: 'flex', justifyContent: 'center'}}>
-<Card.Body style={{display: 'flex', justifyContent: 'center'}}>
+<Card >
+<Card.Body >
 <form onSubmit={ (e) => this.handleSubmit(e)}>
     <h3>New ticket</h3>
+    <Container>
+  <Row>
+  <Col xs="6" sm="4">
+      </Col>
+      <Col xs="6" sm="4">
+      </Col>
+      <Col sm="4">
+  <button type="submit" href="/tickets" className="btn btn-primary btn-block">Submit</button>
+    <a class="btn btn-danger" danger href="/tickets" role="button">Cancel</a> 
+    </Col>
+    </Row> 
 
-    <div className="form-group">
+<Row>
+<Col xs="6">
+<div className="form-group">
         <label>Title</label>
         <input type="text" className="form-control" name="title" placeholder="Enter Title" onChange={ (e) => this.handleChange(e)} value={this.state.title}/>
     </div>
-    <Dropdown >
+
+
+ </Col>
+
+ <Col xs="6">
+<Dropdown >
                     <Dropdown.Toggle style={{background: `${this.state.background}`}} variant="secondary" id="dropdown-basic">
                         {this.state.assignee_name}
                     </Dropdown.Toggle>
@@ -133,7 +149,26 @@ export default class NewForm extends Component {
                })}
                </Dropdown.Menu>
                     </Dropdown>
-                    <Dropdown >
+
+
+                    </Col>
+</Row>
+
+<Row>
+<Col xs="6">
+
+<div className="form-group">
+        <label>Description</label>
+        <textarea style={{"width" : "100%"}} type="text" className="form-control" name = "description" placeholder="Description" onChange={ (e) => this.handleChange(e)} value={this.state.description} />
+    </div>
+
+
+
+
+  </Col>
+  <Col xs="6">
+
+  <Dropdown >
                     <Dropdown.Toggle style={{background: `${this.state.backgroundStatus}`}} variant="secondary" id="dropdown-basic">
                         {this.state.status}
                     </Dropdown.Toggle>
@@ -145,19 +180,23 @@ export default class NewForm extends Component {
                </Dropdown.Menu>
                     </Dropdown>
 
-    <div className="form-group">
-        <label>Description</label>
-        <textarea style={{"width" : "180%"}} type="text" className="form-control" name = "description" placeholder="Description" onChange={ (e) => this.handleChange(e)} value={this.state.description} />
+                    <div className="form-group">
+        <label>Notes</label>
+        <textarea style={{"width" : "100%"}} type="text" className="form-control" name = "note" placeholder="Note" onChange={ (e) => this.handleNotesChange(e)} value={this.state.note} />
     </div>
 
-    <div className="form-group">
-        <label>Notes</label>
-        <textarea style={{"width" : "180%"}} type="text" className="form-control" name = "note" placeholder="Note" onChange={ (e) => this.handleNotesChange(e)} value={this.state.note} />
-    </div>
+
+    </Col>
+  </Row> 
+    
+
+
+
+
+ 
 
      
-    <button type="submit" href="/tickets" className="btn btn-primary btn-block">Submit</button>
-    <a class="btn btn-danger" danger href="/tickets" role="button">Cancel</a>
+  </Container>
 </form>
 </Card.Body>
 </Card>

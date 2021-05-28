@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import {Navbar, Nav, NavDropdown, Form, FormControl, Button } from 'react-bootstrap';
+import {Navbar, Nav } from 'react-bootstrap';
 
 
 
@@ -16,9 +16,10 @@ export default class NavbarMain extends Component {
     }
     
 
-    handleSubmitLogout = (e) => {
-      localStorage.clear();
+    handleSubmitLogout = () => {
+      
       console.log("logout")
+      // this.props.reroute()
       fetch(`${this.props.userUrl}logout` , {
           method: 'GET', 
               headers: {
@@ -28,11 +29,12 @@ export default class NavbarMain extends Component {
       }).then ( res => {
           return res.json()
       }).then ( data => {
-        this.props.clearSess()
-        
-      }).catch(error => console.error).then(
-      window.location.href = "/"
+        return data
+      }).then (
+        this.props.reroute()    
+    ).catch(error => console.error).then(
       )
+      this.props.reroute()
     }
 
 
@@ -40,13 +42,13 @@ export default class NavbarMain extends Component {
         return (
             <div>
 <Navbar bg="light" expand="lg">
-  <Navbar.Brand href="#home">Click Tix</Navbar.Brand>
+  <Navbar.Brand href="/">Click Tix</Navbar.Brand>
   <Navbar.Toggle aria-controls="basic-navbar-nav" />
   <Navbar.Collapse id="basic-navbar-nav">
     <Nav className="mr-auto">
       <Nav.Link href="/tickets">Home</Nav.Link>
       <Nav.Link href="/new">New Ticket</Nav.Link>
-      <Nav.Link onClick={ (e) => this.handleSubmitLogout(e)} href="/" >Sign-Out</Nav.Link>
+      <Nav.Link onClick={ () => this.handleSubmitLogout()}  >Sign-Out</Nav.Link>
     </Nav>
   </Navbar.Collapse>
 </Navbar>

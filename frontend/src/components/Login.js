@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Card } from "react-bootstrap";
-import {Navbar, Nav, NavDropdown, Form, FormControl, Button } from 'react-bootstrap';
+
 export default class Login extends Component {
     constructor(props) {
         super(props)
@@ -44,7 +44,10 @@ export default class Login extends Component {
                 })
                 }
         }).catch(error => console.error)
-        
+        setTimeout(() =>{
+            this.props.addSess()
+            window.location="/tickets"
+            }, 1000)
         
     }
 

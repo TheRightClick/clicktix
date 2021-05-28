@@ -45,6 +45,10 @@ export default class Register extends Component {
                 })
                 }
         }).catch(error => console.error)
+        setTimeout(() =>{
+            this.props.addSess()
+            window.location="/tickets"
+            }, 1000)
     }
 
 
@@ -72,13 +76,6 @@ export default class Register extends Component {
                     <input type="password" className="form-control" name = "password" placeholder="Enter password" onChange={ (e) => this.handleChange(e)} value={this.state.password} />
                 </div>
 
-
-                <div className="form-group">
-                    <div className="custom-control custom-checkbox">
-                        <input type="checkbox" className="custom-control-input" id="customCheck1" />
-                        <label className="custom-control-label" htmlFor="customCheck1">Remember me</label>
-                    </div>
-                </div>
                  <p>{this.state.login_error}</p>   
                 <button type="submit" className="btn btn-primary btn-block">Submit</button>
                 {/* <p className="forgot-password text-right">
