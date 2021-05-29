@@ -11,10 +11,19 @@ export default class NavbarMain extends Component {
         baseURL: 'http://localhost:8000/api/v1/tickets/',
         userUrl: 'http://localhost:8000/api/v1/users/',
         user:'',
-        session: ''
+        session: this.props.session
       }
     }
     
+    handleTicket = () => {
+      this.props.handleTicket()
+    }
+
+
+
+    handleNew = () => {
+      this.props.handleNew()
+    }
 
     handleSubmitLogout = () => {
       
@@ -36,7 +45,10 @@ export default class NavbarMain extends Component {
       )
       this.props.reroute()
     }
-
+   
+    componentDidMount(){
+      this.props.navCheck(this.state.session)
+    }
 
     render() {
         return (
@@ -46,8 +58,8 @@ export default class NavbarMain extends Component {
   <Navbar.Toggle aria-controls="basic-navbar-nav" />
   <Navbar.Collapse id="basic-navbar-nav">
     <Nav className="mr-auto">
-      <Nav.Link href="/tickets">Home</Nav.Link>
-      <Nav.Link href="/new">New Ticket</Nav.Link>
+      <Nav.Link onClick={ () => this.handleTicket()}>Home</Nav.Link>
+      <Nav.Link onClick={ () => this.handleNew()}>New Ticket</Nav.Link>
       <Nav.Link onClick={ () => this.handleSubmitLogout()}  >Sign-Out</Nav.Link>
     </Nav>
   </Navbar.Collapse>
@@ -56,3 +68,5 @@ export default class NavbarMain extends Component {
         )
     }
 }
+{/* <Nav.Link onClick={ () => this.handleSubmitLogout()} href="/tickets">Home</Nav.Link>
+<Nav.Link onClick={ () => this.handleSubmitLogout()} href="/new">New Ticket</Nav.Link> */}

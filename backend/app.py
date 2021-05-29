@@ -6,6 +6,7 @@ import jwt
 from functools import wraps
 from flask_login import LoginManager, current_user
 import models
+
 from resources.tickets import tickets
 from resources.users import users 
 from resources.notes import notes
@@ -56,7 +57,7 @@ def after_request(response):
     return response
 
 app.register_blueprint(tickets, url_prefix='/api/v1/tickets/') 
-
+# app.register_blueprint(ticket, url_prefix='/api/v1/tickets/')
 app.register_blueprint(users, url_prefix='/api/v1/users/' )
 
 app.register_blueprint(notes, url_prefix='/api/v1/notes/' )

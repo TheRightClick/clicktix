@@ -7,7 +7,7 @@ export default class Delete extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            id: this.props.dog
+            id: this.props.ticket
         }
     }
 
@@ -27,8 +27,11 @@ export default class Delete extends Component {
             return res.json()
         }).then (res => {
             console.log("delete now")}).then ( data => {
-            this.props.getDogs()
+                  
         }).catch(error => console.error)
+        setTimeout(() =>{
+            this.props.getTickets()
+            }, 500)
     }
 
   

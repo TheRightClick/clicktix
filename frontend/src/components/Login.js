@@ -38,17 +38,17 @@ export default class Login extends Component {
             if (data.status === 200) {
                 this.props.addSess(data)
                 this.props.getTickets()
-            } else
+            // setTimeout(() =>{
+            //      this.props.addSess()
+            //      window.location="/tickets"
+            //      }, 1000)
+                 }
+                else
             {this.setState ({
                 login_error: "invalid Login"
                 })
                 }
-        }).catch(error => console.error)
-        setTimeout(() =>{
-            this.props.addSess()
-            window.location="/tickets"
-            }, 1000)
-        
+        }).catch(error => console.error)        
     }
 
 

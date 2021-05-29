@@ -25,11 +25,22 @@ class App extends Component {
       user:'',
       session: false,
       ticket: '',
-      users: ''
+      users: '',
+      redirect: ''
     }
   }
  
- 
+ handleTicket = () => {
+   this.setState({
+     redirect: '/tickets'
+   })
+ }
+
+handleNew = () => {
+  this.setState({
+    redirect: '/new'
+  })
+}
 
 
 reroute = () => {
@@ -37,7 +48,8 @@ reroute = () => {
     this.setState({
       session: false,
       user: '',
-      users: ''
+      users: '',
+      redirect:''
     })
     window.location="/"
     }, 500) }
@@ -93,6 +105,7 @@ reroute = () => {
       })
     }
   
+  
       async getOneTix(event) {
         await this.setState({ ticket: parseInt(event) });
         tid = parseInt(event)
@@ -131,10 +144,17 @@ reroute = () => {
         tid = parseInt(event)
     }
 
-  
+    
+    navCheck = (session) => {
+      this.setState({
+        session: session
+      })
+    }
       
     componentDidMount() {
+      if(this.state.session !== true){
       this.checkSess()
+      }
     }
     
     // <Route exact path="/" render={() => (
@@ -149,7 +169,7 @@ reroute = () => {
 
 
   render() {
-    console.log(this.state.session)
+    
     
     return (
       
@@ -157,25 +177,32 @@ reroute = () => {
       <> 
       
       {(this.state.ticket !== '') ? <Redirect to = "/view" /> : null}
-          
+      {(this.state.redirect !=='') ? <Redirect to =  {this.state.redirect} /> : null}
         
-      
-      <NavbarMain reroute={this.reroute} checkSess={this.checkSess} clearSess= {this.clearSess} userUrl={this.state.userUrl} />
-      
+        {/* {(this.state.session === true) ?  */}
+        <NavbarMain handleTicket = {this.handleTicket} handleNew = {this.handleNew} navCheck = {this.navCheck} session={this.state.session} reroute={this.reroute} checkSess={this.checkSess} clearSess= {this.clearSess} userUrl={this.state.userUrl} />
+        {/* // :
+        // null
+        // } */}
 
          <Switch>
          
+         
          <Route exact path="/login">
-         <Login getTickets={this.getTickets} addSess = {this.addSess} session={this.state.session} userUrl={this.state.userUrl}/>:
-         </Route>
+         
+      
+         <Login getTickets={this.getTickets} addSess = {this.addSess} session={this.state.session} userUrl={this.state.userUrl}/>
+        </Route>
          
 
          <Route exact path="/register">
+         {(this.state.session === true) ? 
+        <Tickets  auth={this.state.session} getTickets={this.getTickets} tickets={this.tickets} userUrl = {this.userUrl} addSess = {this.addSess} session={this.state.session} baseUrl={this.state.baseURL} tid={this.state.ticket} userUrl={this.state.userUrl} getOne = {this.getOneTix.bind(this)} />
+         :
          <Register addSess = {this.addSess} userUrl={this.state.userUrl}/>
+         }
          </Route>
          
-
-
          
          <Route  exact path="/">
          {(this.state.session === true) ? 

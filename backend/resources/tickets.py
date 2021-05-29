@@ -6,7 +6,7 @@ from flask_login import current_user, login_required
 
 
 tickets = Blueprint('tickets', 'tickets')
-
+# ticket = Blueprint('ticket', 'ticket')
 
 
 
@@ -18,20 +18,16 @@ def tickets_index():
         query1 = models.Ticket.select().where(models.Ticket.id == payload['id']).order_by(models.Ticket.id.desc())
         query_notes =  models.Notes.select().where(models.Notes.ticket_id==payload['id']).order_by(models.Notes.id.desc())
         tix_dict = [model_to_dict(ticket) for ticket in query1]
-        
         note_dict = [model_to_dict(note) for note in query_notes]
         # tix_dict = model_to_dict(query1)
         [note['note_by'].pop('password') for note in note_dict]
         [note['ticket_id'].pop('note') for note in note_dict]
-        
-
         [ticket['assignee'].pop('password') for ticket in tix_dict]
         [ticket['created_by'].pop('password') for ticket in tix_dict]
         tix_note_dict = {'ticket':{}, 'notes': {}}
         # tix_dict =  tix_dict + note_dict
         tix_note_dict['ticket'] =  tix_dict
         tix_note_dict['notes'] = note_dict
-        
         return jsonify({
             'data': tix_note_dict,
             'message': f"Successfully found {len(tix_dict)} tickets",
@@ -83,7 +79,21 @@ def create_ticket():
             status= 201
             ), 201
 
-
+#New Search below
+@tickets.route('/search', methods=['POST'])
+@login_required
+def tickets_search():
+    payload = request.get_json()
+    
+    query1 = models.Ticket.select()
+    
+    tix_dict = [model_to_dict(ticket) for ticket in query1]
+    
+    return jsonify({
+        'data': tix_dict,
+        'message': f"Successfully found {len(tix_dict)} tickets",
+        'status': 200
+    }), 200 
 
 
 #UPDATE PUT ROUTE
@@ -117,7 +127,6 @@ def update_ticket(id):
             status=201,
             message='Ticket updated',
         ), 201
-
 
 
 #DELETE
