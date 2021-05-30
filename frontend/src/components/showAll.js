@@ -2,12 +2,12 @@ import React, { Component } from 'react'
 
 import Delete from './Delete.js'
 
-import {Table, DropdownButton, Dropdown} from 'react-bootstrap';
+import {Table } from 'react-bootstrap';
 
 
 
 
-export default class Tickets extends Component {
+export default class allTickets extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -21,7 +21,7 @@ export default class Tickets extends Component {
 
     getTickets = () => {
       console.log(this.props.baseUrl)
-        fetch(`${this.props.baseUrl}`, {
+        fetch(`${this.props.baseUrl}all`, {
           'credentials': 'include'
         }).then(res => { 
           return res.json()
@@ -57,18 +57,10 @@ export default class Tickets extends Component {
     render() {
       
         return (
-        //   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        //   Dropdown link
-        // </a>
-        // <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-        //   <a class="dropdown-item" href="#">Action</a>
-        //   <a class="dropdown-item" href="#">Another action</a>
-        //   <a class="dropdown-item" href="#">Something else here</a>
-        // </div>
+            
 
             <div>
-         
-            {/* <NewForm baseUrl={this.props.baseUrl} useUrl={this.props.userUrl} addTickets={this.addTickets}/>  */}
+            
             <Table striped bordered hover>
             <thead>
               <tr>

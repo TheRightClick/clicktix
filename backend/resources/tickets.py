@@ -80,15 +80,16 @@ def create_ticket():
             ), 201
 
 #New Search below
-@tickets.route('/search', methods=['POST'])
+@tickets.route('/all', methods=['GET'])
 @login_required
-def tickets_search():
+def tickets_all():
     payload = request.get_json()
     
-    query1 = models.Ticket.select()
+    query1 = models.Ticket.select().order_by(models.Ticket.last_update.desc())
     
     tix_dict = [model_to_dict(ticket) for ticket in query1]
-    
+    [ticket['assignee'].pop('password') for ticket in tix_dict]
+    [ticket['created_by'].pop('password') for ticket in tix_dict]
     return jsonify({
         'data': tix_dict,
         'message': f"Successfully found {len(tix_dict)} tickets",

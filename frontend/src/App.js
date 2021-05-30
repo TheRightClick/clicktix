@@ -7,11 +7,11 @@ import Register from './components/Registration.js'
 import Tickets from './components/Tickets.js'
 import NewForm from './components/NewForm.js'
 import TicketView from './components/TicketView.js'
+import AllTickets from './components/showAll.js'
+import Search from './components/Search.js'
 
 
 
-
-let auth = false
 let tid = 0
 class App extends Component {
   
@@ -30,10 +30,17 @@ class App extends Component {
     }
   }
  
+
+  handleAll = () => {
+    this.setState({
+       redirect: '/all'
+     }) 
+   }
+
  handleTicket = () => {
-   this.setState({
+  this.setState({
      redirect: '/tickets'
-   })
+   }) 
  }
 
 handleNew = () => {
@@ -41,6 +48,7 @@ handleNew = () => {
     redirect: '/new'
   })
 }
+
 
 
 reroute = () => {
@@ -53,8 +61,7 @@ reroute = () => {
     })
     window.location="/"
     }, 500) }
-
-        
+      
 
 
         
@@ -62,7 +69,6 @@ reroute = () => {
     this.setState({
         session: true,
     })
-    auth = true
     }
 
     getTickets = () => {
@@ -79,12 +85,21 @@ reroute = () => {
           })
       }
     
-    // checkSess = () => {
-    //    let session_open = localStorage.getItem('user')
-    //    this.setState({
-    //        session:session_open,   
-    //    })
-    //    } 
+
+      getSearchResults = () => {
+        console.log(this.baseURL)
+        fetch(`${this.state.baseURL}`, {
+          'credentials': 'include'
+        }).then(res => { 
+          return res.json()
+        }).then(data => {
+            this.setState({
+             tickets: data.data,
+            })
+            console.log(this.state.tickets)
+          })
+      }
+      
 
     checkSess = () => {
     fetch(`${this.state.userUrl}`, {
@@ -108,6 +123,7 @@ reroute = () => {
   
       async getOneTix(event) {
         await this.setState({ ticket: parseInt(event) });
+       
         tid = parseInt(event)
     }
 
@@ -150,7 +166,10 @@ reroute = () => {
         session: session
       })
     }
-      
+    
+
+
+
     componentDidMount() {
       if(this.state.session !== true){
       this.checkSess()
@@ -176,11 +195,11 @@ reroute = () => {
     <Router>
       <> 
       
-      {(this.state.ticket !== '') ? <Redirect to = "/view" /> : null}
+      
       {(this.state.redirect !=='') ? <Redirect to =  {this.state.redirect} /> : null}
-        
+      {(this.state.ticket !== '') ? <Redirect to = "/view" /> : null}
         {/* {(this.state.session === true) ?  */}
-        <NavbarMain handleTicket = {this.handleTicket} handleNew = {this.handleNew} navCheck = {this.navCheck} session={this.state.session} reroute={this.reroute} checkSess={this.checkSess} clearSess= {this.clearSess} userUrl={this.state.userUrl} />
+        <NavbarMain handleAll = {this.handleAll} handleTicket = {this.handleTicket} handleNew = {this.handleNew} navCheck = {this.navCheck} session={this.state.session} reroute={this.reroute} checkSess={this.checkSess} clearSess= {this.clearSess} userUrl={this.state.userUrl} />
         {/* // :
         // null
         // } */}
@@ -188,9 +207,7 @@ reroute = () => {
          <Switch>
          
          
-         <Route exact path="/login">
-         
-      
+         <Route exact path="/login">      
          <Login getTickets={this.getTickets} addSess = {this.addSess} session={this.state.session} userUrl={this.state.userUrl}/>
         </Route>
          
@@ -231,12 +248,27 @@ reroute = () => {
         <Login getTickets={this.getTickets} addSess = {this.addSess} session={this.state.session} userUrl={this.state.userUrl}/>
           }
          </Route> 
-       
+
+         <Route exact path="/all">
+         {(this.state.session === true) ? 
+         <AllTickets  auth={this.state.session} getTickets={this.getTickets} tickets={this.tickets} userUrl = {this.userUrl} addSess = {this.addSess} session={this.state.session} baseUrl={this.state.baseURL} tid={this.state.ticket} userUrl={this.state.userUrl} getOne = {this.getOneTix.bind(this)}/>
+         :
+        <Login getTickets={this.getTickets} addSess = {this.addSess} session={this.state.session} userUrl={this.state.userUrl}/>
+          }
+         </Route> 
+
+         <Route exact path="/search">
+         {(this.state.session === true) ? 
+         <Search  auth={this.state.session} getTickets={this.getTickets} tickets={this.tickets} userUrl = {this.userUrl} addSess = {this.addSess} session={this.state.session} baseUrl={this.state.baseURL} tid={this.state.ticket} userUrl={this.state.userUrl} getOne = {this.getOneTix.bind(this)}/>
+         :
+        <Login getTickets={this.getTickets} addSess = {this.addSess} session={this.state.session} userUrl={this.state.userUrl}/>
+          }
+         </Route> 
          
          
          <Route exact path="/view">
          {(this.state.session === true) ? 
-         <TicketView notesUrl={this.notesUrl} addTicket={this.addTicket}  addSess = {this.addSess} session={this.state.session} baseUrl={this.state.baseURL} userUrl={this.state.userUrl} tid={this.state.ticket} />
+         <TicketView handleTicket = {this.handleTicket} notesUrl={this.notesUrl} addTicket={this.addTicket}  addSess = {this.addSess} session={this.state.session} baseUrl={this.state.baseURL} userUrl={this.state.userUrl} tid={this.state.ticket} />
          :
          <Login getTickets={this.getTickets} addSess = {this.addSess} session={this.state.session} userUrl={this.state.userUrl}/>
          }

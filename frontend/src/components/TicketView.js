@@ -126,11 +126,10 @@ export default class TicketView extends Component {
                 this.props.addTicket(data)
                 console.log(data)
                 this.getTicket()
-                
             }).catch(error => console.error)
-            // window.location.href = "/Tickets"
+            window.location="/"
         }
-// map for each note in this.state.noets
+
         componentDidMount() {
             this.getTicket()
             this.getUsers()
@@ -155,8 +154,8 @@ export default class TicketView extends Component {
       <Col xs="6" sm="4">
       </Col>
       <Col sm="4">
-  <button type="submit" href="/tickets" className="btn btn-primary btn-block">Submit</button>
-    <a class="btn btn-danger" danger href="/tickets" role="button">Cancel</a> 
+    <button type="submit" href="/tickets" className="btn btn-primary btn-block">Submit</button>
+    <a className="btn btn-danger" danger href="/tickets" role="button">Cancel</a> 
     </Col>
     </Row> 
 

@@ -19,7 +19,9 @@ export default class NavbarMain extends Component {
       this.props.handleTicket()
     }
 
-
+    handleAll = () => {
+      this.props.handleAll()
+    }
 
     handleNew = () => {
       this.props.handleNew()
@@ -57,16 +59,17 @@ export default class NavbarMain extends Component {
   <Navbar.Brand href="/">Click Tix</Navbar.Brand>
   <Navbar.Toggle aria-controls="basic-navbar-nav" />
   <Navbar.Collapse id="basic-navbar-nav">
-    <Nav className="mr-auto">
-      <Nav.Link onClick={ () => this.handleTicket()}>Home</Nav.Link>
+   {(this.props.session === true) ?
+   <Nav className="mr-auto">
+      <Nav.Link onClick={ () => this.handleTicket()}>My Tickets</Nav.Link>
       <Nav.Link onClick={ () => this.handleNew()}>New Ticket</Nav.Link>
+      <Nav.Link onClick={ () => this.handleAll()}>All Tickets</Nav.Link>
       <Nav.Link onClick={ () => this.handleSubmitLogout()}  >Sign-Out</Nav.Link>
     </Nav>
+  : null }
   </Navbar.Collapse>
 </Navbar>
 </div>
         )
     }
 }
-{/* <Nav.Link onClick={ () => this.handleSubmitLogout()} href="/tickets">Home</Nav.Link>
-<Nav.Link onClick={ () => this.handleSubmitLogout()} href="/new">New Ticket</Nav.Link> */}
