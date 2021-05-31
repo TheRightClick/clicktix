@@ -251,10 +251,10 @@ export default class Search extends Component {
                  <td style = {{"width": "5%"}}> {tickets.id} </td>
                  <td style = {{"width": "15%"}}> {tickets.title} </td>
                  <td style = {{"width": "10%"}}> {tickets.status} </td>
-                 <td style = {{"width": "25%"}}className="overflow-auto"> {tickets.description} </td>
+                 <td style = {{"width": "25%"}}className="overflow-auto">{tickets.description} </td>
                  <td style = {{"width": "10%"}}> {tickets.assignee.username} </td>
                  <td style = {{"width": "10%"}}><Delete  getTickets={this.getTickets} baseUrl={this.props.baseUrl} ticket={tickets.id} /></td>
-                 <td style = {{"width": "10%"}}> <button onClick={this.editOne.bind(this)} value={tickets.id} > edit </button></td>
+                 <td style = {{"width": "10%"}}> <button onClick={this.editOne.bind(this)} value={tickets.id}>edit</button></td>
                </tr>
              )
            })}

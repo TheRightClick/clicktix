@@ -38,7 +38,7 @@ export default class Register extends Component {
         }).then ( data => {
             if (data.status !== 401) {
                 this.props.addSess(data)
-                window.location.href ="/"
+                // window.location.href ="/"
             } else
             {this.setState ({
                 login_error: "invalid Login"
@@ -46,14 +46,17 @@ export default class Register extends Component {
                 }
         }).catch(error => console.error)
         setTimeout(() =>{
-            this.props.addSess()
-            window.location="/tickets"
+            // this.props.addSess()
+            this.props.handleTicket()
             }, 1000)
     }
 
 
     render() {
-        // console.log(`${this.props.userUrl}login`)
+        const enabled =
+          this.state.email !== '' &&
+          this.state.password !== '' &&
+          this.state.email !== '' 
         return (
             <div className='container' style={{"width" : "50%"}} >
             <Card style={{display: 'flex', justifyContent: 'center'}}>
@@ -77,10 +80,8 @@ export default class Register extends Component {
                 </div>
 
                  <p>{this.state.login_error}</p>   
-                <button type="submit" className="btn btn-primary btn-block">Submit</button>
-                {/* <p className="forgot-password text-right">
-                    Forgot <a href="#">password?</a>
-                </p> */}
+                <button type="submit" disabled={!enabled} className="btn btn-primary btn-block">Submit</button>
+                <a class="btn btn-danger" danger href="/login" role="button">Cancel</a> 
             </form>
             </Card.Body>
             </Card>

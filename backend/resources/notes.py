@@ -32,7 +32,7 @@ def create_note():
     payload = request.get_json() 
     new_note = models.Notes.create(note = payload['note'],
     note_by=current_user.id, ticket_id=payload['ticket_id'])
-    day = datetime.now().strftime("%d/%m/%Y")
+    day = datetime.now().strftime("%m/%d/%Y")
     now = datetime.now().strftime("%H:%M:%S")
     models.Ticket.update(last_update = f"{day} {now}") .where(models.Ticket.id==payload['ticket_id']).execute()
     note_dict = model_to_dict(new_note)

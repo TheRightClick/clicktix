@@ -9,7 +9,7 @@ import NewForm from './components/NewForm.js'
 import TicketView from './components/TicketView.js'
 import AllTickets from './components/showAll.js'
 import Search from './components/Search.js'
-
+import notFound from './components/notFound.js'
 
 
 let tid = 0
@@ -26,7 +26,8 @@ class App extends Component {
       session: false,
       ticket: '',
       users: '',
-      redirect: ''
+      redirect: '',
+     
     }
   }
  
@@ -37,9 +38,17 @@ class App extends Component {
      }) 
    }
 
+handleTid = () => {
+  this.setState({
+    ticket: '',
+    redirect: ''
+  })
+}
+
+
  handleTicket = () => {
   this.setState({
-     redirect: '/tickets'
+     redirect: '/tickets',
    }) 
  }
 
@@ -65,14 +74,15 @@ reroute = () => {
 
 
         
-  addSess = () => {
+  addSess = (data) => {
+    console.log(data)
     this.setState({
         session: true,
+        user: data.data.id
     })
     }
 
     getTickets = () => {
-      console.log(this.baseURL)
         fetch(`${this.state.baseURL}`, {
           'credentials': 'include'
         }).then(res => { 
@@ -81,8 +91,8 @@ reroute = () => {
             this.setState({
              tickets: data.data,
             })
-            console.log(this.state.tickets)
-          })
+          }).catch(error => console.error) 
+        console.log('done getting')
       }
     
 
@@ -112,40 +122,27 @@ reroute = () => {
         console.log(data.data.no_user)
         console.log('no user')}
         else {
+          console.log("this is data", data)
           this.setState({
             users:data.data,
             session: true,
-            user:data.username
+            user: data.data.id
            })}
+           console.log(this.state.user)
       })
     }
   
   
       async getOneTix(event) {
         await this.setState({ ticket: parseInt(event) });
-       
         tid = parseInt(event)
     }
-
-    // async reroute(sess) {
-    //  await this.setState({session: sess})
-    //   // window.location="/"
-    // }
 
     async clearSess() {
       await this.setState({ session: false, user: '' })
     }
 
-    // clearSess = () => {
-    //   console.log("clear")
-    //   localStorage.clear();
-    //   auth = false
-    //   this.setState({
-    //     session: false,
-        
-    //   })
-      
-    // }
+
 
     addTicket = (newTicket) => {
       const copyTickets = [...this.state.tickets]
@@ -176,20 +173,10 @@ reroute = () => {
       }
     }
     
-    // <Route exact path="/" render={() => (
-    //   session ? (
-    //     <Redirect to="/dashboard"/>
-    //   ) : (
-    //     <PublicHomePage/>
-    //   )
-    // )}/>
-
-
 
 
   render() {
-    
-    
+     
     return (
       
     <Router>
@@ -214,16 +201,16 @@ reroute = () => {
 
          <Route exact path="/register">
          {(this.state.session === true) ? 
-        <Tickets  auth={this.state.session} getTickets={this.getTickets} tickets={this.tickets} userUrl = {this.userUrl} addSess = {this.addSess} session={this.state.session} baseUrl={this.state.baseURL} tid={this.state.ticket} userUrl={this.state.userUrl} getOne = {this.getOneTix.bind(this)} />
+        <Tickets  handleTid = {this.handleTid} auth={this.state.session} handleTicket = {this.handleTicket} getTickets={this.getTickets} tickets={this.tickets} userUrl = {this.userUrl} addSess = {this.addSess} session={this.state.session} baseUrl={this.state.baseURL} tid={this.state.ticket} userUrl={this.state.userUrl} getOne = {this.getOneTix.bind(this)} />
          :
-         <Register addSess = {this.addSess} userUrl={this.state.userUrl}/>
+         <Register handleTicket = {this.handleTicket} addSess = {this.addSess} userUrl={this.state.userUrl}/>
          }
          </Route>
          
          
          <Route  exact path="/">
          {(this.state.session === true) ? 
-           <Tickets  auth={this.state.session} getTickets={this.getTickets} tickets={this.tickets} userUrl = {this.userUrl} addSess = {this.addSess} session={this.state.session} baseUrl={this.state.baseURL} tid={this.state.ticket} userUrl={this.state.userUrl} getOne = {this.getOneTix.bind(this)} />
+           <Tickets  handleTid = {this.handleTid} handleTicket = {this.handleTicket} auth={this.state.session} getTickets={this.getTickets} tickets={this.tickets} userUrl = {this.userUrl} addSess = {this.addSess} session={this.state.session} baseUrl={this.state.baseURL} tid={this.state.ticket} userUrl={this.state.userUrl} getOne = {this.getOneTix.bind(this)} />
            :
          <Login getTickets={this.getTickets} addSess = {this.addSess} session={this.state.session} userUrl={this.state.userUrl}/>
           }
@@ -234,7 +221,7 @@ reroute = () => {
         
          <Route exact path="/new">
          {(this.state.session === true) ? 
-         <NewForm notesUrl={this.notesUrl} addTicket={this.addTicket}  addSess = {this.addSess} session={this.state.session} baseUrl={this.state.baseURL} userUrl={this.state.userUrl}/>
+         <NewForm user={this.state.user} handleTicket = {this.handleTicket} notesUrl={this.notesUrl} addTicket={this.addTicket}  addSess = {this.addSess} session={this.state.session} baseUrl={this.state.baseURL} userUrl={this.state.userUrl}/>
           :
           <Login getTickets={this.getTickets} addSess = {this.addSess} session={this.state.session} userUrl={this.state.userUrl}/>
         } 
@@ -243,7 +230,7 @@ reroute = () => {
         
          <Route  exact path="/tickets">
          {(this.state.session === true) ? 
-         <Tickets  auth={this.state.session} getTickets={this.getTickets} tickets={this.tickets} userUrl = {this.userUrl} addSess = {this.addSess} session={this.state.session} baseUrl={this.state.baseURL} tid={this.state.ticket} userUrl={this.state.userUrl} getOne = {this.getOneTix.bind(this)}/>
+         <Tickets  handleTicket = {this.handleTicket} handleTid = {this.handleTid} auth={this.state.session} getTickets={this.getTickets} tickets={this.tickets} userUrl = {this.userUrl} addSess = {this.addSess} session={this.state.session} baseUrl={this.state.baseURL} tid={this.state.ticket} userUrl={this.state.userUrl} getOne = {this.getOneTix.bind(this)}/>
          :
         <Login getTickets={this.getTickets} addSess = {this.addSess} session={this.state.session} userUrl={this.state.userUrl}/>
           }
@@ -251,7 +238,7 @@ reroute = () => {
 
          <Route exact path="/all">
          {(this.state.session === true) ? 
-         <AllTickets  auth={this.state.session} getTickets={this.getTickets} tickets={this.tickets} userUrl = {this.userUrl} addSess = {this.addSess} session={this.state.session} baseUrl={this.state.baseURL} tid={this.state.ticket} userUrl={this.state.userUrl} getOne = {this.getOneTix.bind(this)}/>
+         <AllTickets handleTicket = {this.handleTicket} handleAll = {this.handleAll} handleTid = {this.handleTid} auth={this.state.session} getTickets={this.getTickets} tickets={this.tickets} userUrl = {this.userUrl} addSess = {this.addSess} session={this.state.session} baseUrl={this.state.baseURL} tid={this.state.ticket} userUrl={this.state.userUrl} getOne = {this.getOneTix.bind(this)}/>
          :
         <Login getTickets={this.getTickets} addSess = {this.addSess} session={this.state.session} userUrl={this.state.userUrl}/>
           }
@@ -268,28 +255,12 @@ reroute = () => {
          
          <Route exact path="/view">
          {(this.state.session === true) ? 
-         <TicketView handleTicket = {this.handleTicket} notesUrl={this.notesUrl} addTicket={this.addTicket}  addSess = {this.addSess} session={this.state.session} baseUrl={this.state.baseURL} userUrl={this.state.userUrl} tid={this.state.ticket} />
+         <TicketView  handleTid = {this.handleTid} handleTicket = {this.handleTicket} notesUrl={this.notesUrl} addTicket={this.addTicket}  addSess = {this.addSess} session={this.state.session} baseUrl={this.state.baseURL} userUrl={this.state.userUrl} tid={this.state.ticket} />
          :
          <Login getTickets={this.getTickets} addSess = {this.addSess} session={this.state.session} userUrl={this.state.userUrl}/>
          }
          </Route> 
-        
-         
-       
-       {/* <Tickets tickets={this.tickets} userUrl = {this.userUrl} addSess = {this.addSess} session={this.state.session} baseUrl={this.state.baseURL} userUrl={this.state.userUrl}/> */}
-       
-        
-      
-      
-      
-        
-      {/* <Route exact path="/">
-        {auth = true ? 
-        <Redirect to="/tickets" /> :
-        <Redirect to="/login" />
-        } */}
-
-      {/* </Route> */}
+         <Route path='*' exact={true} component={notFound} />
     </Switch>
     </>
     </Router>

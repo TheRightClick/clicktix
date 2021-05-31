@@ -54,7 +54,7 @@ def tickets_index():
 def create_ticket():
     payload = request.get_json() 
     print(payload)
-    day = datetime.now().strftime("%d/%m/%Y")
+    day = datetime.now().strftime("%m/%d/%Y")
     now = datetime.now().strftime("%H:%M:%S")
 
     new_ticket = models.Ticket.create(title = payload['title'], last_update = f"{day} {now}", description = payload['description'], status=payload['status'], created_by=current_user.id, assignee=payload['assignee'])
@@ -104,7 +104,7 @@ def tickets_all():
 def update_ticket(id):
     payload = request.get_json()
     
-    day = datetime.now().strftime("%d/%m/%Y")
+    day = datetime.now().strftime("%m/%d/%Y")
     now = datetime.now().strftime("%H:%M:%S")
     updated = model_to_dict(models.Ticket.get_by_id(id))
     

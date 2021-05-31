@@ -56,7 +56,7 @@ export default class NavbarMain extends Component {
         return (
             <div>
 <Navbar bg="light" expand="lg">
-  <Navbar.Brand href="/">Click Tix</Navbar.Brand>
+  <Navbar.Brand onClick={ () => this.handleTicket()}>Click Tix</Navbar.Brand>
   <Navbar.Toggle aria-controls="basic-navbar-nav" />
   <Navbar.Collapse id="basic-navbar-nav">
    {(this.props.session === true) ?

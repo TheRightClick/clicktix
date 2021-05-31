@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {Dropdown, Card, Container, Row, Col }  from 'react-bootstrap';
+let status = 'Open'
 
 export default class NewForm extends Component {
     constructor(props) {
@@ -15,15 +16,30 @@ export default class NewForm extends Component {
             backgroundStatus: '',
             ticketId: '',
             notesUrl:'http://localhost:8000/api/v1/notes/',
-            note:''
+            note:'',
+            user: this.props.user
         }
     }
 
+    userId = this.props.user
+
     status = ["Open", "Working", "Pending Info", "Closed"]
 
-    handleChange =(e)=> {
+    // handleChange =(e)=> {
+    //     if(this.state.status === 'Select Status') {
+    //         this.setState({
+    //             [e.target.name]: e.target.value,
+    //             status: 'Open'
+    //         })
+    //     }
+    //     this.setState({
+    //         [e.target.name]: e.target.value
+    //     })
+    // }
+
+    handleChange = (e) => {
         this.setState({
-            [e.target.name]: e.target.value
+            [e.target.name]: e.target.value,
         })
     }
     
@@ -53,6 +69,7 @@ export default class NewForm extends Component {
             background: 'blue',
         })
         console.log(e, f)
+        this.userId = parseInt(f)
     }
 
     handleStatus = (e) => {
@@ -60,19 +77,26 @@ export default class NewForm extends Component {
             status: e,
             backgroundStatus: 'blue',
         })
-        
+        status = e
     }
+
+    async defaultStatus(e){
+        await this.setState ({
+            status: 'Open'
+        })
+    }
+
 
     handleSubmit = (e) => {
         e.preventDefault()
-        console.log(this.props.baseUrl)
+        
         fetch(`${this.props.baseUrl}new`, {
             method: 'POST', 
             body: JSON.stringify({
                 title: this.state.title,
                 description: this.state.description,
-                status: this.state.status,
-                assignee: this.state.assignee,
+                status: status,
+                assignee: this.userId,
                 note: this.state.note,
             }),
                 headers: {
@@ -96,6 +120,10 @@ export default class NewForm extends Component {
                 empty_desc: '',
                 })
         }).catch(error => console.error)
+        setTimeout(() =>{
+            this.props.handleTicket()
+            }, 500)       
+    
     }
 
 
@@ -108,7 +136,7 @@ export default class NewForm extends Component {
  
 
     render() {
-       
+        
         return (
 <div className='container' style={{"width" : "90%"}} >
 <Card >
@@ -170,7 +198,7 @@ export default class NewForm extends Component {
 
   <Dropdown >
                     <Dropdown.Toggle style={{background: `${this.state.backgroundStatus}`}} variant="secondary" id="dropdown-basic">
-                        {this.state.status}
+                      {this.state.status}
                     </Dropdown.Toggle>
                     <Dropdown.Menu >
                     {this.status.map((status, i) => {

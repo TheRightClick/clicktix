@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { ThemeProvider } from 'react-bootstrap'
 
 
 
@@ -6,39 +7,33 @@ import React, { Component } from 'react'
 export default class Delete extends Component {
     constructor(props) {
         super(props)
-        this.state = {
-            id: this.props.ticket
-        }
     }
+
+
 
      handleSubmit = (e) => {
         e.preventDefault()
-        console.log("this delete")
-        fetch(`${this.props.baseUrl}${this.state.id}` , {
+        console.log(this.props.ticket)
+        fetch(`${this.props.baseUrl}${this.props.ticket}` , {
             method: 'DELETE', 
-            body: JSON.stringify({
-                id: this.props.id
-            }),
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+            headers: {
+                'Content-Type': 'text/plain'
+            },
                 'credentials': 'include'
         }).then ( res => {
             return res.json()
         }).then (res => {
-            console.log("delete now")}).then ( data => {
-                  
-        }).catch(error => console.error)
-        setTimeout(() =>{
+        console.log("deleted now")}).then ( data => {
+        }).then( result => {
             this.props.getTickets()
-            }, 500)
+        }).catch(error => console.error) 
     }
 
   
 
     render() {
         return (
-                <button id="_id"  name="_id" onClick={ (e) => this.handleSubmit(e)} type="submit" value={this.state._id} style={{cursor:'pointer'}}>Delete</button>
+                <button id="id"  name="id" onClick={ (e) => this.handleSubmit(e)} type="submit"  style={{cursor:'pointer'}}>Delete</button>
         )
     }
 }

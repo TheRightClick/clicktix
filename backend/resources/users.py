@@ -153,7 +153,7 @@ def login():
             }, users.secret_key)
 
             return jsonify(
-                data={},
+                data=user_dict,
                 # token = token,
                 message=f"succesfully logged in {user_dict['email']}",
                 status=200

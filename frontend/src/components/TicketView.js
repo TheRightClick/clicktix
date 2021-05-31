@@ -63,6 +63,10 @@ export default class TicketView extends Component {
         
     }
 
+    handleTicket = () => {
+        this.props.handleTicket()
+      }
+
 
     handleAssignee = (e, f) => {
         this.setState({
@@ -106,7 +110,6 @@ export default class TicketView extends Component {
 
         handleSubmit = (e) => {
             e.preventDefault()
-            console.log(this.props.baseUrl)
             fetch(`${this.props.baseUrl}${this.props.tid}`, {
                 method: 'PUT', 
                 body: JSON.stringify({
@@ -123,16 +126,22 @@ export default class TicketView extends Component {
             }).then ( res => {
                 return res.json()
             }).then ( data => {
+                // this.props.getTicket()
                 this.props.addTicket(data)
                 console.log(data)
-                this.getTicket()
+                
             }).catch(error => console.error)
-            window.location="/"
+            // window.location="/"
+            // this.props.handleTid()
+            setTimeout(() =>{
+                this.handleTicket()
+                }, 500)
         }
 
         componentDidMount() {
             this.getTicket()
             this.getUsers()
+            
           } 
 
     render() {
@@ -155,7 +164,7 @@ export default class TicketView extends Component {
       </Col>
       <Col sm="4">
     <button type="submit" href="/tickets" className="btn btn-primary btn-block">Submit</button>
-    <a className="btn btn-danger" danger href="/tickets" role="button">Cancel</a> 
+    <a className="btn btn-danger"  href="/tickets" role="button">Cancel</a> 
     </Col>
     </Row> 
 
@@ -223,10 +232,13 @@ export default class TicketView extends Component {
                <Row>
                 <Col>
                 <h4> Previous Notes </h4>
-                <div overflow-auto>
+                <div overflow-auto="true">
                 {this.state.notes.map((note, i) => {
-                return (<ul class="list-group">
-                    <li class="list-group-item">{note.note}</li>
+                return (<ul className="list-group">
+                    <li className="list-group-item">
+                        <p><small>Created: {note.created_time} <br/> By: {note.note_by.username}</small></p>
+                        {note.note}
+                    </li>
                 </ul>  
                  )
                 })}
