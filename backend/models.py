@@ -1,9 +1,11 @@
 from peewee import *
 import datetime 
 from flask_login import UserMixin
+import os
+from playhouse.db_url import connect
 
+DATABASE = connect(os.environ.get('DATABASE_URL') or 'sqlite:///tickets.sqlite')
 
-DATABASE = SqliteDatabase('tickets.sqlite')
 
 class Users(UserMixin, Model):
     username=CharField(unique=True)
@@ -16,7 +18,6 @@ class Users(UserMixin, Model):
 
 
 class Ticket(Model):
-    # owner = ForeignKeyField(Users, backref='my_dogs')
     title = CharField()
     description = CharField()
     created_time = DateTimeField(default=datetime.datetime.now)
@@ -32,11 +33,10 @@ class Ticket(Model):
 
 class Notes(Model):
     note = CharField() 
-    
     created_time = DateTimeField(default=datetime.datetime.now)
     note_by = ForeignKeyField(Users)
     ticket_id = ForeignKeyField(Ticket.id)
-    # ticket_id = ForeignKeyField(Ticket.id, backref='notes_ordered')
+
 
     class Meta:
         database = DATABASE 
