@@ -10,7 +10,10 @@ To install clixtix, simply download the repo and within the front end do NPM ins
 On the backend, in the terminal activate the env. 
 The backend currently uses sqlite for development if changes are required before deploying.
 
-Wireframes and Data Structure:
+User stories:
+https://github.com/TheRightClick/clicktix/issues/2
+
+Wireframes and data structure:
 https://github.com/TheRightClick/clicktix/issues/1
 
 Deployed site:
